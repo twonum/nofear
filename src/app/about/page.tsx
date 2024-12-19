@@ -36,7 +36,6 @@ export default function About() {
               <li>Tools</li>
               <li>Vehicles</li>
               <li>People</li>
-              <li>Food</li>
             </ul>
           </li>
 
@@ -48,17 +47,8 @@ export default function About() {
 
           <li>
             <strong>Admin Dashboard:</strong> A feature-rich dashboard for
-            administrators, allowing them to:
-            <ul className="list-disc list-inside ml-6 mt-2 space-y-2">
-              <li>
-                Manage datasets, including uploading and linking market
-                datasets.
-              </li>
-              <li>Track detection logs with screenshots of events.</li>
-              <li>
-                Monitor system performance and maintain security standards.
-              </li>
-            </ul>
+            administrators, allowing them to access and manage the system and
+            links.
           </li>
 
           <li>

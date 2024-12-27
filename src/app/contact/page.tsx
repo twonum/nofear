@@ -42,6 +42,11 @@ const ContactForm = () => {
         setName(""); // Clear the form fields on success
         setEmail("");
         setMessage("");
+
+        // Automatically clear the success message after 5 seconds
+        setTimeout(() => {
+          setSuccess("");
+        }, 5000);
       } else {
         setError(data.message || "An unknown error occurred");
       }

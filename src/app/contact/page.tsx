@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useState } from "react";
@@ -6,49 +7,48 @@ const ContactForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("Sending...");
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
-    if (!name || !email || !message) {
-      setStatus("All fields (name, email, and message) are required.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("message", message);
+    // Prepare form data in JSON format to send with fetch
+    const formData = {
+      access_key: "d5e71c26-c571-44c9-a647-d1d7307f3567",
+      name,
+      email,
+      message,
+    };
 
     try {
-      const response = await fetch("/api/contact-admins", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setStatus(`Failed to send message: ${errorData.message}`);
-        return;
-      }
+      const data = await response.json();
 
-      const contentType = response.headers.get("Content-Type");
-
-      if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        setStatus(data.message || "Message sent successfully!");
-        setName("");
+      if (data.success) {
+        setSuccess("Email Sent Successfully!");
+        setName(""); // Clear the form fields on success
         setEmail("");
         setMessage("");
       } else {
-        const text = await response.text();
-        setStatus(`Unexpected response format: ${text}`);
+        setError(data.message || "An unknown error occurred");
       }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setStatus("An unexpected error occurred.");
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +56,7 @@ const ContactForm = () => {
     <div className="relative min-h-screen flex items-center justify-center text-white">
       <div className="w-full max-w-lg p-6 bg-gradient-to-b from-transparent to-black rounded-lg shadow-lg">
         <h1 className="text-4xl font-extrabold text-center mb-8">Contact Us</h1>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={onSubmit}>
           <div>
             <label htmlFor="name" className="block text-sm mb-2">
               Your Name
@@ -103,12 +103,18 @@ const ContactForm = () => {
             <button
               type="submit"
               className="w-full px-8 py-3 text-lg font-bold border border-white rounded-md bg-transparent hover:bg-white hover:text-black transition"
+              disabled={loading}
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
           </div>
         </form>
-        {status && <p className="text-center text-sm mt-4">{status}</p>}
+        {error && (
+          <p className="text-center text-sm mt-4 text-red-500">{error}</p>
+        )}
+        {success && (
+          <p className="text-center text-sm mt-4 text-green-500">{success}</p>
+        )}
       </div>
     </div>
   );

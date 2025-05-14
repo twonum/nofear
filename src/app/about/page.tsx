@@ -15,7 +15,7 @@ export default function About() {
         solution for advanced safety and security applications. This project was
         designed and developed by <strong>Muhammad Taha Saleem</strong>{" "}
         (2022-CS-139), with crucial contributions from{" "}
-        <strong>Hussain Ali</strong> (2022-CS-129). Together, we have built a
+        <strong>Hassan Subhan</strong> (2022-CS-117). Together, we have built a
         sophisticated system capable of addressing diverse surveillance needs
         with precision and efficiency.
       </p>
